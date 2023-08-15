@@ -1,0 +1,14 @@
+,name,description,breakfast,lunch,supper,snack,drink,dessert,ingredients,directions,pic
+0,Fried Rice,The Chinese restaurant staple. ,False,True,True,False,False,False,"2 cups rice
+4 cups water
+2/3 cup chopped carrots
+1/2 cup frozen peas
+2 tbsp vegetable oil
+soy sauce to taste
+sesame oil to taste","1. Combine rice and water in a pot. Bring to a boil. Cover, and simmer 15 minutes. Remove from heat and rest 5 minutes. Remove cover, fluff with a fork and let stand 5 minutes.
+2. While rice is cooking, boil carrots 3 - 5 minutes. Drop peas into boiling water once carrots are done. Drain.
+3. Heat pan with oil.
+4. Fry carrots and peas about 30 seconds.
+5. Crack in eggs, quickly stir to scramble.
+6. Add soy sauce, stir to coat.
+7. Remove from heat, drizzle with sesame oil and serve.",fried_rice.jpeg

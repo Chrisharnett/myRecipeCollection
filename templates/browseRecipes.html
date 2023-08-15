@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% from 'form-macros.html' import render_field %}
+
+{% block head_title %}
+My Recipe Collection
+{% endblock %}
+
+{% block Page_Title %}
+My Recipe Collection
+{% endblock %}
+
+{% block Recipe_Title %}
+My Recipe Collection
+{% endblock %}
+
+{% block Recipe_Description %}
+    <section>
+    <form action="{{ url_for('browseRecipes') }}" enctype="multipart/form-data" method="post">
+        {{ form.csrf_token }}
+        <div class="row d-inline-flex p-3">
+            <div class="col-md-10 addRecipeForm">
+                <div class="categories d-flex">
+                    <label>Categories: </label><br>
+                    <br>
+                    <div class="categoryList">
+                        {{ render_field(form.breakfastCategory) }}
+                        {{ render_field(form.lunchCategory ) }}
+                        {{ render_field(form.supperCategory) }}
+                        {{ render_field(form.dessertCategory) }}
+                        {{ render_field(form.snackCategory) }}
+                        {{ render_field(form.drinkCategory) }}
+                    </div>
+                    <br><br>
+                </div>
+            </div><br>
+            <br><div class="submit ml-auto">
+                <button type="submit">Refine Search</button>
+            </div>
+        </div>
+    </form>
+    <div class="container inline">
+        <hr>
+        {% for recipe in recipes %}
+        <br><br>
+        <a href="{{ url_for('viewRecipe', recipeName=recipe[0]) }}"><img src="{{ url_for('static', filename='img/' + recipe[2]) }}" alt='{{ recipe[1] }}' class='smallImage' title='click to view'></a><br>
+        {{ recipe[0] }}<br>
+        {{ recipe[1] }}<br>
+    {% endfor %}
+    </div>
+{% endblock %}
+
+{% block Heading1_title %}
+    {{ r2['name'] }}
+{% endblock %}
+
+{% block Small_Recipe_Image_1 %}
+    <br><img src="{{ url_for('static', filename='img/' + r2['pic']) }}" alt='{{ r2['description'] }}' class='smallImage' title='click to view'><br>
+{% endblock %}
+
+{% block Heading1_contents %}
+{{  r2['description'] }}
+{% endblock %}
+
+{% block recipe_footer_link_1 %}
+    {{ url_for('viewRecipe', recipeName=r2['name']) }}
+{% endblock %}
+
+{% block Heading2_title %}
+    {{ r3['name'] }}
+{% endblock %}
+
+{% block Small_Recipe_Image_2 %}
+    <br><img src="{{ url_for('static', filename='img/' + r3['pic']) }}" alt='{{ r3['description'] }}' class='smallImage' title='click to view'><br>
+{% endblock %}
+
+{% block Heading2_contents %}
+    {{  r3['description'] }}
+{% endblock %}
+
+{% block recipe_footer_link_2 %}
+    {{ url_for('viewRecipe', recipeName=r3['name']) }}
+{% endblock %}
+
+{% block Heading3_title %}
+    {{ r4['name'] }}
+{% endblock %}
+
+{% block Small_Recipe_Image_3 %}
+    <br><img src="{{ url_for('static', filename='img/' + r4['pic']) }}" alt='{{ r4['description'] }}' class='smallImage' title='click to view'><br>
+{% endblock %}
+
+{% block Heading3_contents %}
+    {{  r4['description'] }}
+{% endblock %}
+
+{% block recipe_footer_link_3 %}
+    {{ url_for('viewRecipe', recipeName=r4['name']) }}
+{% endblock %}
+
+{% block footer_contents %}
+    Chris Harnett <br>
+    Student Number 20188141
+{% endblock %}

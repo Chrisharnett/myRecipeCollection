@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block head_title %}
+My Recipe Collection
+{% endblock %}
+
+{% block Page_Title %}
+My Recipe Collection
+{% endblock %}
+
+{% block Recipe_Title %}
+Search Results
+{% endblock %}
+
+{% block Recipe_Description %}
+    {% if searchResults|length > 0 %}
+        {% for recipe in searchResults %}
+            <br><div class="col-md-3">
+                {{ recipe[0] }}
+                <br><a href="{{ url_for('viewRecipe', recipeName=recipe[0]) }}"><img src="{{ url_for('static', filename='img/' + recipe[2]) }}" alt='{{ recipe[1] }}' class='smallImage' title='click to view'></a><br>
+                {{  recipe[1] }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <br><div class="no results">No recipes match your search.</div>
+    {% endif %}
+{% endblock %}
+
+{% block Heading1_title %}
+    {{ r2['name'] }}
+{% endblock %}
+
+{% block Small_Recipe_Image_1 %}
+    <br><img src="{{ url_for('static', filename='img/' + r2['pic']) }}" alt='{{ r2['description'] }}' class='smallImage' title='click to view'><br>
+{% endblock %}
+
+{% block Heading1_contents %}
+{{  r2['description'] }}
+{% endblock %}
+
+{% block recipe_footer_link_1 %}
+    {{ url_for('viewRecipe', recipeName=r2['name']) }}
+{% endblock %}
+
+{% block Heading2_title %}
+    {{ r3['name'] }}
+{% endblock %}
+
+{% block Small_Recipe_Image_2 %}
+    <br><img src="{{ url_for('static', filename='img/' + r3['pic']) }}" alt='{{ r3['description'] }}' class='smallImage' title='click to view'><br>
+{% endblock %}
+
+{% block Heading2_contents %}
+    {{  r3['description'] }}
+{% endblock %}
+
+{% block recipe_footer_link_2 %}
+    {{ url_for('viewRecipe', recipeName=r3['name']) }}
+{% endblock %}
+
+{% block Heading3_title %}
+    {{ r4['name'] }}
+{% endblock %}
+
+{% block Small_Recipe_Image_3 %}
+    <br><img src="{{ url_for('static', filename='img/' + r4['pic']) }}" alt='{{ r4['description'] }}' class='smallImage' title='click to view'><br>
+{% endblock %}
+
+{% block Heading3_contents %}
+    {{  r4['description'] }}
+{% endblock %}
+
+{% block recipe_footer_link_3 %}
+    {{ url_for('viewRecipe', recipeName=r4['name']) }}
+{% endblock %}
+
+{% block footer_contents %}
+    Chris Harnett <br>
+    Student Number 20188141
+{% endblock %}

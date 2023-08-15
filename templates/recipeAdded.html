@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% from 'form-macros.html' import render_field %}
+
+{% block head_title %}
+My Recipe Collection
+{% endblock %}
+
+{% block Page_Title %}
+My Recipe Collection
+{% endblock %}
+
+{% block Recipe_Title %}
+    {%  with messages = get_flashed_messages() %}
+        {%  if messages %}
+            <ul class=flashes>
+            {%  for message in messages %}
+                <li> {{  message }}</li>
+            {%  endfor %}
+            </ul>
+        {%  endif %}
+    {% endwith %}
+    {%  block body%}{% endblock %}
+Add a Recipe
+{% endblock %}
+
+{% block Recipe_Description %}
+
+<section>
+    <form action="{{ url_for('myRecipeCollection') }}" enctype="multipart/form-data" method="post">
+        {{ form.csrf_token }}
+<div class="row">
+    <div class="col-md-8 addRecipeForm d-flex">
+        <div class="nameAndDescription">
+            {{ render_field(form.recipeName, size=20) }}<br>
+            {{ render_field(form.recipeDescription, size=1000) }}
+        </div><br>
+        <div class="categories">
+            <label>Categories</label>
+            <div class="categoryList d-inline-flex p2 form-check">
+                {{ render_field(form.breakfastCategory) }}
+                {{ render_field(form.lunchCategory ) }}
+                {{ render_field(form.supperCategory) }}
+                {{ render_field(form.dessertCategory) }}
+                {{ render_field(form.snackCategory) }}
+                {{ render_field(form.drinkCategory) }}
+            </div>
+        </div><br>
+        <div class="details form-check">
+            {{ render_field(form.recipeIngredients, size = 100) }}<br>
+            {{ render_field(form.recipeDirections, size= 1000) }}<br>
+            {{ render_field(form.recipePicture) }}<br>
+        </div><br>
+    </div>
+</div>
+    <div class="submit">
+        <button type="submit" name="action" value="newRecipe">Submit</button>
+    </div>
+
+    </form>
+    </section>
+{% endblock %}
+
+{% block Heading1_title %}
+
+{% endblock %}
+
+{% block Heading1_contents %}
+
+{% endblock %}
+
+{% block Heading2_title %}
+
+{% endblock %}
+
+{% block Heading2_contents %}
+
+{% endblock %}
+
+{% block Heading3_title %}
+
+{% endblock %}
+
+{% block Heading3_contents %}
+
+{% endblock %}
+
+{% block footer_contents %}
+    Chris Harnett <br>
+    Student Number 20188141
+{% endblock %}
