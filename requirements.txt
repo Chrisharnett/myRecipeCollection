@@ -1,0 +1,5 @@
+Flask==2.2.2
+Flask_WTF==1.0.1
+pandas==1.5.3
+Werkzeug==2.2.3
+WTForms==2.3.3
