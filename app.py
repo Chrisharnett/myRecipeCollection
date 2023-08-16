@@ -7,10 +7,11 @@ import random
 
 # LATEST Now
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'nvmnkfwslzmnx.kj456/W?ERIU&WE(F*&/hksef;g98734:SP(&D'
-app.config['SUBMITTED_DATA'] = os.path.join('static', 'data', '')
-app.config['SUBMITTED_IMG'] = os.path.join('static', 'img', '')
+application = Flask(__name__)
+
+application.config['SECRET_KEY'] = 'nvmnkfwslzmnx.kj456/W?ERIU&WE(F*&/hksef;g98734:SP(&D'
+application.config['SUBMITTED_DATA'] = os.path.join('static', 'data', '')
+application.config['SUBMITTED_IMG'] = os.path.join('static', 'img', '')
 
 # Get the current list of recipe names
 path = os.getcwd() + "/static/data"
@@ -18,20 +19,20 @@ recipeNames = []
 for r in os.listdir(path):
     recipeNames.append(r.replace(".csv", ""))
 
-@app.route('/', methods=['POST', 'GET'])
+@application.route('/', methods=['POST', 'GET'])
 def myRecipeCollection():
     """
     Function to get random recipes to display on page
     :return:
     """
     random.shuffle(recipeNames)
-    r1 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r1 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeNames[0].lower().replace(" ", "_") + '.csv'), index_col=False)
-    r2 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r2 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeNames[1].lower().replace(" ", "_") + '.csv'), index_col=False)
-    r3 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r3 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeNames[2].lower().replace(" ", "_") + '.csv'), index_col=False)
-    r4 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r4 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeNames[3].lower().replace(" ", "_") + '.csv'), index_col=False)
 
     if request.method == 'POST' and request.form['action'] == 'search':
@@ -52,12 +53,12 @@ def myRecipeCollection():
             directions = form.recipeDirections.data
             pic = recipeName.lower().replace(" ", "_") + "." + \
                   secure_filename(form.recipePicture.data.filename).split('.')[-1]
-            form.recipePicture.data.save(os.path.join(app.config['SUBMITTED_IMG'] + pic))
+            form.recipePicture.data.save(os.path.join(application.config['SUBMITTED_IMG'] + pic))
             df = pd.DataFrame(
                 [{'name': recipeName, 'description': description, 'breakfast': breakfast, 'lunch': lunch,
                   'supper': supper, 'snack': snack, 'drink': drink, 'dessert': dessert,
                   'ingredients': ingredients, 'directions': directions, 'pic': pic}])
-            df.to_csv(os.path.join(app.config['SUBMITTED_DATA'] + recipeName.lower().replace(" ", "_") + ".csv"))
+            df.to_csv(os.path.join(application.config['SUBMITTED_DATA'] + recipeName.lower().replace(" ", "_") + ".csv"))
             recipeNames.append(df['name'])
             flash('Recipe saved!')
             return redirect(url_for('addRecipe'))
@@ -67,7 +68,7 @@ def myRecipeCollection():
     return render_template('index.html', r1=r1.iloc[0], r2=r2.iloc[0], r3=r3.iloc[0], r4=r4.iloc[0])
 
 
-@app.route('/addRecipe', methods=['POST', 'GET'])
+@application.route('/addRecipe', methods=['POST', 'GET'])
 def addRecipe():
     """
         Create and get data to make a recipe.
@@ -78,18 +79,18 @@ def addRecipe():
     form = RecipeForm()
     return render_template('addRecipe.html', form=form)
 
-@app.route('/recipeAdded.html')
+@application.route('/recipeAdded.html')
 def recipeAdded():
     form = RecipeForm()
     return render_template('recipeAdded.html', form=form)
-@app.route('/viewRecipe/<recipeName>')
+@application.route('/viewRecipe/<recipeName>')
 def viewRecipe(recipeName):
     """
     Function to parse the ingredients and description.
     :param recipeName:
     :return: recipe name, ingredients, description
     """
-    mainRecipe = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    mainRecipe = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                           recipeName.lower().replace(" ", "_") + '.csv'), index_col=False)
     ingredients = mainRecipe['ingredients'].str.split("\n")
     directions = mainRecipe['directions'].str.split("\n")
@@ -97,11 +98,11 @@ def viewRecipe(recipeName):
     recipeList = [recipe for recipe in recipeNames]
     recipeList.remove(mainRecipe.iloc[0]['name'].lower().replace(" ", "_"))
     random.shuffle(recipeList)
-    r2 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r2 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeList[0].lower().replace(" ", "_") + '.csv'), index_col=False)
-    r3 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r3 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeList[1].lower().replace(" ", "_") + '.csv'), index_col=False)
-    r4 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r4 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeList[2].lower().replace(" ", "_") + '.csv'), index_col=False)
 
     return render_template('viewRecipe.html', mainRecipe=mainRecipe.iloc[0], ingredients=ingredients[0],
@@ -109,31 +110,31 @@ def viewRecipe(recipeName):
                            r2=r2.iloc[0], r3=r3.iloc[0], r4=r4.iloc[0])
 
 
-@app.route('/searchRecipes/<searchString>', methods=['POST', 'GET'])
+@application.route('/searchRecipes/<searchString>', methods=['POST', 'GET'])
 def searchRecipes(searchString):
     searchResults = []
     if searchString == "":
         return browseRecipes()
     else:
         for name in recipeNames:
-            df = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+            df = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                           name.lower().replace(" ", "_") + '.csv'), index_col=False)
             if df.iloc[0].str.contains(searchString).any():
                 searchResults.append([df.iloc[0]['name'], df.iloc[0]['description'], df.iloc[0]['pic']])
 
     random.shuffle(recipeNames)
 
-    r2 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r2 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeNames[1].lower().replace(" ", "_") + '.csv'), index_col=False)
-    r3 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r3 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeNames[2].lower().replace(" ", "_") + '.csv'), index_col=False)
-    r4 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r4 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeNames[3].lower().replace(" ", "_") + '.csv'), index_col=False)
     return render_template('searchRecipes.html', r2=r2.iloc[0], r3=r3.iloc[0],
                            r4=r4.iloc[0], searchResults=searchResults)
 
 
-@app.route('/browseRecipes', methods=['POST', 'GET'])
+@application.route('/browseRecipes', methods=['POST', 'GET'])
 def browseRecipes():
     """
         Function to get random recipes to display on page
@@ -164,7 +165,7 @@ def browseRecipes():
     recipesToBrowse = []
     if len(categories) > 0:
         for name in recipeNames:
-            recipe = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+            recipe = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                               name.lower().replace(" ", "_") + '.csv'), index_col=False)
             for category in categories:
                 if recipe.iloc[0][category]:
@@ -173,17 +174,17 @@ def browseRecipes():
 
     else:
         for name in recipeNames:
-            recipe = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+            recipe = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                               name.lower().replace(" ", "_") + '.csv'), index_col=False)
             recipesToBrowse.append([recipe.iloc[0]['name'], recipe.iloc[0]['description'], recipe.iloc[0]['pic']])
 
     random.shuffle(recipeNames)
 
-    r2 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r2 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeNames[1].lower().replace(" ", "_") + '.csv'), index_col=False)
-    r3 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r3 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeNames[2].lower().replace(" ", "_") + '.csv'), index_col=False)
-    r4 = pd.read_csv(os.path.join(app.config['SUBMITTED_DATA'] +
+    r4 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeNames[3].lower().replace(" ", "_") + '.csv'), index_col=False)
 
     return render_template('browseRecipes.html', r2=r2.iloc[0], r3=r3.iloc[0], r4=r4.iloc[0],
@@ -191,4 +192,4 @@ def browseRecipes():
 
 
 if __name__ == '__main__':
-    app.run()
+    application.run()
