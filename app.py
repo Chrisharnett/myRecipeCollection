@@ -5,6 +5,8 @@ from werkzeug.utils import secure_filename
 from forms import *
 import random
 
+# LATEST
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'nvmnkfwslzmnx.kj456/W?ERIU&WE(F*&/hksef;g98734:SP(&D'
 app.config['SUBMITTED_DATA'] = os.path.join('static', 'data', '')
