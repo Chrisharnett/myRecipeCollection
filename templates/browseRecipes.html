@@ -43,8 +43,8 @@ My Recipe Collection
         <hr>
         {% for recipe in recipes %}
         <br><br>
+        <h4>{{ recipe[0] }}<br></h4>
         <a href="{{ url_for('viewRecipe', recipeName=recipe[0]) }}"><img src="{{ url_for('static', filename='img/' + recipe[2]) }}" alt='{{ recipe[1] }}' class='smallImage' title='click to view'></a><br>
-        {{ recipe[0] }}<br>
         {{ recipe[1] }}<br>
     {% endfor %}
     </div>

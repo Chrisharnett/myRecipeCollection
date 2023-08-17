@@ -41,7 +41,17 @@ def myRecipeCollection():
         if searchString == "":
             return redirect(url_for('myRecipeCollection'))
         return redirect(url_for('searchRecipes', searchString=searchString))
-    elif request.method == 'POST' and request.form['action'] == 'newRecipe':
+
+    return render_template('index.html', r1=r1.iloc[0], r2=r2.iloc[0], r3=r3.iloc[0], r4=r4.iloc[0])
+
+
+@application.route('/addRecipe', methods=['POST', 'GET'])
+def addRecipe():
+    """
+        Create and get data to make a recipe.
+        :return: if form is complete, go to home page. Else reload addRecipe page
+    """
+    if request.method == 'POST' and request.form['action'] == 'newRecipe':
         form = RecipeForm()
         if form.validate_on_submit():
             recipeName = form.recipeName.data
@@ -61,30 +71,16 @@ def myRecipeCollection():
                 [{'name': recipeName, 'description': description, 'breakfast': breakfast, 'lunch': lunch,
                   'supper': supper, 'snack': snack, 'drink': drink, 'dessert': dessert,
                   'ingredients': ingredients, 'directions': directions, 'pic': pic}])
-            df.to_csv(os.path.join(application.config['SUBMITTED_DATA'] + recipeName.lower().replace(" ", "_") + ".csv"))
+            df.to_csv(
+                os.path.join(application.config['SUBMITTED_DATA'] + recipeName.lower().replace(" ", "_") + ".csv"))
             flash('Recipe saved!')
             return redirect(url_for('addRecipe'))
         else:
             return render_template('addRecipe.html')
 
-    return render_template('index.html', r1=r1.iloc[0], r2=r2.iloc[0], r3=r3.iloc[0], r4=r4.iloc[0])
-
-
-@application.route('/addRecipe', methods=['POST', 'GET'])
-def addRecipe():
-    """
-        Create and get data to make a recipe.
-        :return: if form is complete, go to home page. Else reload addRecipe page
-    """
-    ## form functionality was moved to the index because of conflicts with the submit buttons.
-
     form = RecipeForm()
     return render_template('addRecipe.html', form=form)
 
-@application.route('/recipeAdded.html')
-def recipeAdded():
-    form = RecipeForm()
-    return render_template('recipeAdded.html', form=form)
 @application.route('/viewRecipe/<recipeName>', methods=['POST', 'GET'])
 def viewRecipe(recipeName):
     """
@@ -125,6 +121,11 @@ def viewRecipe(recipeName):
 
 @application.route('/searchRecipes/<searchString>', methods=['POST', 'GET'])
 def searchRecipes(searchString):
+    """
+    Function to search recipe for a keyword and display True results
+    :param searchString
+    :return searchResults
+    """
     allRecipes = recipeNames()
     searchResults = []
     if searchString == "":
@@ -151,8 +152,8 @@ def searchRecipes(searchString):
 @application.route('/browseRecipes', methods=['POST', 'GET'])
 def browseRecipes():
     """
-        Function to get random recipes to display on page
-        :return:
+        Function to show only results in a certain category
+        :return recipesToBrowse
         """
     categories = []
     categoryForm = CategoryForm()
