@@ -5,8 +5,6 @@ from werkzeug.utils import secure_filename
 from forms import *
 import random
 
-# LATEST Now
-
 application = Flask(__name__)
 
 application.config['SECRET_KEY'] = 'nvmnkfwslzmnx.kj456/W?ERIU&WE(F*&/hksef;g98734:SP(&D'
@@ -16,10 +14,10 @@ application.config['SUBMITTED_IMG'] = os.path.join('static', 'img', '')
 # Get the current list of recipe names
 path = os.getcwd() + "/static/data"
 def recipeNames():
-    recipeNames = []
+    names = []
     for r in os.listdir(path):
-        recipeNames.append(r.replace(".csv", ""))
-    return recipeNames
+        names.append(r.replace(".csv", ""))
+    return names
 
 @application.route('/', methods=['POST', 'GET'])
 def myRecipeCollection():
@@ -40,6 +38,8 @@ def myRecipeCollection():
 
     if request.method == 'POST' and request.form['action'] == 'search':
         searchString = request.form['searchString']
+        if searchString == "":
+            return redirect(url_for('myRecipeCollection'))
         return redirect(url_for('searchRecipes', searchString=searchString))
     elif request.method == 'POST' and request.form['action'] == 'newRecipe':
         form = RecipeForm()
@@ -62,7 +62,6 @@ def myRecipeCollection():
                   'supper': supper, 'snack': snack, 'drink': drink, 'dessert': dessert,
                   'ingredients': ingredients, 'directions': directions, 'pic': pic}])
             df.to_csv(os.path.join(application.config['SUBMITTED_DATA'] + recipeName.lower().replace(" ", "_") + ".csv"))
-            # recipeNames.append(df.iloc[0]['name'])
             flash('Recipe saved!')
             return redirect(url_for('addRecipe'))
         else:
@@ -86,7 +85,7 @@ def addRecipe():
 def recipeAdded():
     form = RecipeForm()
     return render_template('recipeAdded.html', form=form)
-@application.route('/viewRecipe/<recipeName>')
+@application.route('/viewRecipe/<recipeName>', methods=['POST', 'GET'])
 def viewRecipe(recipeName):
     """
     Function to parse the ingredients and description.
@@ -108,6 +107,16 @@ def viewRecipe(recipeName):
                                   recipeList[1].lower().replace(" ", "_") + '.csv'), index_col=False)
     r4 = pd.read_csv(os.path.join(application.config['SUBMITTED_DATA'] +
                                   recipeList[2].lower().replace(" ", "_") + '.csv'), index_col=False)
+
+    """ Function to delete active recipe."""
+    if request.method == 'POST' and request.form['action'] == 'DeleteRecipe':
+        if os.path.exists(application.config['SUBMITTED_DATA'] + mainRecipe.iloc[0]['name'].lower().replace(" ", "_") + '.csv'):
+            os.remove(application.config['SUBMITTED_DATA'] + mainRecipe.iloc[0]['name'].lower().replace(" ", "_") + '.csv')
+            for imageFile in os.listdir(os.getcwd() + "/static/img"):
+                if mainRecipe.iloc[0]['name'] == os.path.splitext(imageFile)[0]:
+                    os.remove(application.config['SUBMITTED_IMG'] + imageFile)
+                    flash(f"'{mainRecipe.iloc[0]['name']}' removed from recipes.")
+                    return redirect(url_for('myRecipeCollection'))
 
     return render_template('viewRecipe.html', mainRecipe=mainRecipe.iloc[0], ingredients=ingredients[0],
                            directions=directions[0],
@@ -206,4 +215,4 @@ def browseRecipes():
 
 
 if __name__ == '__main__':
-    application.run()
+    application.run(port=5001)
