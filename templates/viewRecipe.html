@@ -9,7 +9,7 @@ My Recipe Collection
 {% endblock %}
 
 {% block Recipe_Title %}
-{{ mainRecipe['name'] }}
+    <h1>{{ mainRecipe['name'] }}</h1>
 {% endblock %}
 
 {% block Recipe_Description %}
@@ -36,6 +36,11 @@ My Recipe Collection
             </ul>
         </div>
     </div>
+    <form action="{{ url_for('viewRecipe', recipeName=mainRecipe['name']) }}" method='POST'>
+        <div class="submit">
+        <button type="submit" name="action" value="DeleteRecipe" class="btn btn-danger" id={{ mainRecipe['name'] }}>Delete Recipe</button>
+    </div>
+    </form>
 </div>
 {% endblock %}
 

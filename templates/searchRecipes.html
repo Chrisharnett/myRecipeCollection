@@ -9,16 +9,16 @@ My Recipe Collection
 {% endblock %}
 
 {% block Recipe_Title %}
-Search Results
+ <h1>Search Results</h1>
 {% endblock %}
 
 {% block Recipe_Description %}
     {% if searchResults|length > 0 %}
         {% for recipe in searchResults %}
-            <br><div class="col-md-3">
-                {{ recipe[0] }}
-                <br><a href="{{ url_for('viewRecipe', recipeName=recipe[0]) }}"><img src="{{ url_for('static', filename='img/' + recipe[2]) }}" alt='{{ recipe[1] }}' class='smallImage' title='click to view'></a><br>
-                {{  recipe[1] }}
+            <div class="col-md-3">
+                <h4>{{ recipe[0] }}</h4>
+                <a href="{{ url_for('viewRecipe', recipeName=recipe[0]) }}"><img src="{{ url_for('static', filename='img/' + recipe[2]) }}" alt='{{ recipe[1] }}' class='smallImage' title='click to view'></a><br>
+                {{ recipe[1] }}
             </div>
         {% endfor %}
     {% else %}
@@ -31,7 +31,7 @@ Search Results
 {% endblock %}
 
 {% block Small_Recipe_Image_1 %}
-    <br><img src="{{ url_for('static', filename='img/' + r2['pic']) }}" alt='{{ r2['description'] }}' class='smallImage' title='click to view'><br>
+    <br><img src="{{ url_for('static', filename='img/' + r2['pic']) }}" alt='{{ r2['description'] }}' class='smallImage' title='click to view'>
 {% endblock %}
 
 {% block Heading1_contents %}

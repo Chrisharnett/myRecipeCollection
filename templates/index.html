@@ -12,7 +12,17 @@ My Recipe Collection
 {% endblock %}
 
 {% block Recipe_Title %}
-{{ r1['name'] }}
+    {%  with messages = get_flashed_messages() %}
+        {%  if messages %}
+            <ul class=flashes>
+            {%  for message in messages %}
+                <li class="flash"> {{  message }} </li>
+            {%  endfor %}
+            </ul>
+        {%  endif %}
+    {% endwith %}
+    {%  block body%}{% endblock %}
+<h1>{{ r1['name'] }}</h1>
 {% endblock %}
 
 {% block Main_Recipe_Image %}
